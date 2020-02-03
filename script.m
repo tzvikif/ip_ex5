@@ -61,7 +61,7 @@ yoffSet = ypeak-size(pattern,1);
 xoffSet = xpeak-size(pattern,2);
 
 drawRect([xoffSet+1, yoffSet+1, size(pattern,2), size(pattern,1)]);
-%% 
+%% 5
 close all;clc;
 im = imread('coins3.tif');
 imshow(im);
@@ -81,5 +81,34 @@ for peak = peaks
     plot(peak(1),peak(2),'*','color','r');
 end
 hold off
+%% 6
+close all;clc;clear;
+box1Im = imread('boxOfChocolates1.tif');
+%box2Im = imread('boxOfChocolates2.tif');
+%box2rotIm = imread('boxOfChocolates2rot.tif');
 
+%imshow(box2Im);
+%imshow(box2rotIm);
 
+sigma = 2;
+l = 0.2;
+h = 0.8;
+e = edge(box1Im,'Canny',[l h],sigma);
+showImage(255*e);
+[H,theta,rho] = hough(e,'RhoResolution',1,'Theta',-90:1:89);
+peaks = houghpeaks(H,30);
+%imshow(H,[],'XData',theta,'YData',rho,'InitialMagnification','fit');
+%xlabel('\theta'), ylabel('\rho');
+%axis on, axis normal, hold on;
+%plot(theta(peaks(:,2)),rho(peaks(:,1)),'s','color','white');
+lines = houghlines(e,theta,rho,peaks,'FillGap',5,'MinLength',50);
+imshow(box1Im);
+hold on;
+for k = 1:length(lines)
+   xy = [lines(k).point1; lines(k).point2];
+   rho = lines(k).rho;
+   theta = lines(k).theta;
+   
+   plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
+end
+hold off;
