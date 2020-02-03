@@ -81,14 +81,9 @@ for peak = peaks
     plot(peak(1),peak(2),'*','color','r');
 end
 hold off
-%% 6
+%% 6.1
 close all;clc;clear;
 box1Im = imread('boxOfChocolates1.tif');
-%box2Im = imread('boxOfChocolates2.tif');
-%box2rotIm = imread('boxOfChocolates2rot.tif');
-
-%imshow(box2Im);
-%imshow(box2rotIm);
 
 sigma = 2;
 l = 0.2;
@@ -103,6 +98,56 @@ peaks = houghpeaks(H,30);
 %plot(theta(peaks(:,2)),rho(peaks(:,1)),'s','color','white');
 lines = houghlines(e,theta,rho,peaks,'FillGap',5,'MinLength',50);
 imshow(box1Im);
+hold on;
+for k = 1:length(lines)
+   xy = [lines(k).point1; lines(k).point2];
+   rho = lines(k).rho;
+   theta = lines(k).theta;
+   
+   plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
+end
+hold off;
+%% 6.2
+close all;clc;clear;
+box2Im = imread('boxOfChocolates2.tif');
+%box2rotIm = imread('boxOfChocolates2rot.tif');
+%imshow(box2rotIm);
+
+sigma = 0.1;
+l = 0.0;
+h = 0.6;
+e = edge(box2Im,'Canny',[l h],sigma);
+figure;
+imshow(255*e);
+[H,theta,rho] = hough(e,'RhoResolution',1,'Theta',-90:1:89);
+peaks = houghpeaks(H,30);
+lines = houghlines(e,theta,rho,peaks,'FillGap',5,'MinLength',5);
+imshow(box2Im);
+hold on;
+for k = 1:length(lines)
+   xy = [lines(k).point1; lines(k).point2];
+   rho = lines(k).rho;
+   theta = lines(k).theta;
+   
+   plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
+end
+hold off;
+
+%% 6.3
+close all;clc;clear;
+box2rotIm = imread('boxOfChocolates2rot.tif');
+imshow(box2rotIm);
+
+sigma = 0.1;
+l = 0.03;
+h = 0.6;
+e = edge(box2rotIm,'Canny',[l h],sigma);
+figure;
+imshow(255*e);
+[H,theta,rho] = hough(e,'RhoResolution',1,'Theta',-90:1:89);
+peaks = houghpeaks(H,30);
+lines = houghlines(e,theta,rho,peaks,'FillGap',5,'MinLength',5);
+imshow(box2rotIm);
 hold on;
 for k = 1:length(lines)
    xy = [lines(k).point1; lines(k).point2];
